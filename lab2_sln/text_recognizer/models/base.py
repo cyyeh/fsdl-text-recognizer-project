@@ -13,6 +13,7 @@ DIRNAME = Path(__file__).parents[1].resolve() / 'weights'
 
 class Model:
     """Base class, to be subclassed by predictors for specific type of data."""
+
     def __init__(self, dataset_cls: type, network_fn: Callable, dataset_args: Dict = None, network_args: Dict = None):
         self.name = f'{self.__class__.__name__}_{dataset_cls.__name__}_{network_fn.__name__}'
 
@@ -22,7 +23,8 @@ class Model:
 
         if network_args is None:
             network_args = {}
-        self.network = network_fn(self.data.input_shape, self.data.output_shape, **network_args)
+        self.network = network_fn(
+            self.data.input_shape, self.data.output_shape, **network_args)
         self.network.summary()
 
         self.batch_augment_fn: Optional[Callable] = None
@@ -41,7 +43,8 @@ class Model:
         if callbacks is None:
             callbacks = []
 
-        self.network.compile(loss=self.loss(), optimizer=self.optimizer(), metrics=self.metrics())
+        self.network.compile(
+            loss=self.loss(), optimizer=self.optimizer(), metrics=self.metrics())
 
         train_sequence = DatasetSequence(
             dataset.x_train,
@@ -69,7 +72,8 @@ class Model:
         )
 
     def evaluate(self, x, y, batch_size=16, verbose=False):  # pylint: disable=unused-argument
-        sequence = DatasetSequence(x, y, batch_size=batch_size)  # Use a small batch size to use less memory
+        # Use a small batch size to use less memory
+        sequence = DatasetSequence(x, y, batch_size=batch_size)
         preds = self.network.predict_generator(sequence)
         return np.mean(np.argmax(preds, -1) == np.argmax(y, -1))
 
