@@ -64,7 +64,7 @@ cd fsdl-text-recognizer-project
 1. Direct to the project root folder
 2. Run `pipenv install --dev` to install both dependencies and dev-dependencies(Note: In this project, we use `python3.7`, since python version in Google AI Platform Notebooks is `3.7`)
 3. Run `sh setup.sh`
-4. From now on, precede commands with `pipenv run` to make sure they use the correct environment.(Note: If there is `module not found error`, run `sh setup_python.sh` first)
+4. From now on, precede commands with `pipenv run` to make sure they use the correct environment.(Note: If there is `module not found error`, run `export PYTHONPATH=.` first)
 
 # Ready
 
