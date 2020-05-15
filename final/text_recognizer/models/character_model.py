@@ -4,6 +4,7 @@ Define CharacterModel class.
 from typing import Callable, Dict, Tuple
 
 import numpy as np
+import tensorflow as tf
 
 from text_recognizer.models.base import Model
 from text_recognizer.datasets.emnist_dataset import EmnistDataset
@@ -22,8 +23,9 @@ class CharacterModel(Model):
         if image.dtype == np.uint8:
             image = (image / 255).astype(np.float32)
         # NOTE: integer to character mapping dictionary is self.data.mapping[integer]
-        pred_raw = self.network.predict(
-            np.expand_dims(image, 0), batch_size=1).flatten()
+        pred_raw = tf.nn.softmax(self.network.predict(
+            np.expand_dims(image, 0), batch_size=1).flatten())
+
         ind = np.argmax(pred_raw)
         confidence_of_prediction = pred_raw[ind]
         predicted_character = self.data.mapping[ind]
