@@ -6,6 +6,7 @@ from typing import Union
 from urllib.request import urlopen, urlretrieve
 import hashlib
 
+import numpy as np
 import cv2
 from tqdm import tqdm
 

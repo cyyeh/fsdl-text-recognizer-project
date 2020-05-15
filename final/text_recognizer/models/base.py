@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Callable, Dict, Optional
 
 from tensorflow.keras.optimizers import RMSprop
-from tensorflow.keras.losses import SparseCategoricalCrossentropy
+from tensorflow.keras.losses import CategoricalCrossentropy
 import numpy as np
 
 from text_recognizer.datasets.dataset_sequence import DatasetSequence
@@ -64,24 +64,22 @@ class Model:
         )
         
         self.network.fit(
-            generator=train_sequence,
+            x=train_sequence,
             epochs=epochs,
             callbacks=callbacks,
             validation_data=test_sequence,
-            use_multiprocessing=True,
-            workers=2,
             shuffle=True
         )
     
     def evaluate(self, x, y, batch_size=16, verbose=False): # pylint: disable=unused-argument
         # Use a small batch size to use less memory
-        sequence = DatasetSequence(x, y batch_size=batch_size)
+        sequence = DatasetSequence(x, y, batch_size=batch_size)
         preds = self.network.predict(sequence)
         return np.mean(np.argmax(preds, -1) == np.argmax(y, -1))
     
     
     def loss(self): # pylint: disable=no-self-use
-        return SparseCategoricalCrossentropy(from_logits=True)
+        return CategoricalCrossentropy(from_logits=True)
     
     def optimizer(self): # pylint: disable=no-self-use
         return RMSprop()
