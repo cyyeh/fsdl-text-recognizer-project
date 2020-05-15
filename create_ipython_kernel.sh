@@ -1,3 +1,4 @@
+#!/bin/bash
 export KERNEL_NAME="my-kernel"
 export DISPLAY_NAME="fsdl-text-recognizer"
 pipenv install ipykernel --dev
