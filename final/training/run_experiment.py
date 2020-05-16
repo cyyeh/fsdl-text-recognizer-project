@@ -68,25 +68,27 @@ def run_experiment(experiment_config: Dict, save_weights: bool, gpu_ind: int, us
         dataset_args=dataset_args,
         network_args=network_args
     )
-    print(model)
     
     experiment_config['train_args'] = {**DEFAULT_TRAIN_ARGS, **experiment_config.get('train_args', {})}
     experiment_config['experiment_group'] = experiment_config.get('experiment_group', None)
     experiment_config['gpu_ind'] = gpu_ind
     
-    train_model(
+    _history = train_model(
         model,
         dataset,
         epochs=experiment_config['train_args']['epochs'],
         batch_size=experiment_config['train_args']['batch_size'],
         gpu_ind=gpu_ind,
-        use_wandb=use_wandb
+        use_wandb=use_wandb,
+        print_model_summary=False
     )
     score = model.evaluate(dataset.x_test, dataset.y_test)
     print(f'Test evaluation: {score}')
     
     if save_weights:
         model.save_weights()
+        
+    return _history
     
     
 def _parse_args():

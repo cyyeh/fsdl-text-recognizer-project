@@ -63,7 +63,7 @@ class Model:
             format_fn=self.batch_format_fn
         )
         
-        self.network.fit(
+        return self.network.fit(
             x=train_sequence,
             epochs=epochs,
             callbacks=callbacks,

@@ -5,6 +5,7 @@ from time import time
 from typing import Optional
 
 import numpy as np
+import pandas as pd
 from tensorflow.keras.callbacks import EarlyStopping
 
 from text_recognizer.datasets.dataset import Dataset
@@ -20,7 +21,8 @@ def train_model(
         epochs: int,
         batch_size: int,
         gpu_ind: Optional[int] = None,
-        use_wandb: bool = False) -> Model:
+        use_wandb: bool = False,
+        print_model_summary: bool = True) -> Model:
     """Train model."""
     callbacks = []
     
@@ -31,8 +33,9 @@ def train_model(
     if GPU_UTIL_SAMPLER and gpu_ind is not None:
         gpu_utilization = GPUUtilizationSampler(gpu_ind)
         callbacks.append(gpu_utilization)
-        
-    model.network.summary()
+    
+    if print_model_summary:
+        model.network.summary();
     
     t = time()
     _history = model.fit(dataset=dataset, batch_size=batch_size, epochs=epochs, callbacks=callbacks)
@@ -42,4 +45,11 @@ def train_model(
         gpu_utilizations = gpu_utilization.samples
         print(f'GPU utilization: {round(np.mean(gpu_utilizations), 2)} +- {round(np.std(gpu_utilizations), 2)}')
         
-    return model
+    return _history
+
+
+def plot_learning_curves(history, figsize=(12, 8)):
+    import matplotlib.pyplot as plt
+    pd.DataFrame(history.history).plot(figsize=figsize)
+    plt.grid(True)
+    plt.show()

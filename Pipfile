@@ -15,6 +15,7 @@ requests = "*"
 tensorflow = "==2.2.0rc2"
 toml = "*"
 tqdm = "*"
+pandas = "*"
 
 [dev-packages]
 bandit = "*"
